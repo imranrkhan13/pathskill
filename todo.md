@@ -12,7 +12,9 @@
 - [x] Inspect connected Vercel access and Vercel-compatible serverless requirements.
 - [x] Adapt the Express and tRPC application for Vercel serverless deployment without exposing AI credentials.
 - [x] Validate the Vercel build configuration, TypeScript checks, and local production bundle.
-- [ ] Sync the Vercel-compatible configuration to the selected GitHub repository and push it.
+- [x] Sync the Vercel-compatible configuration to the selected GitHub repository and push it.
 - [ ] Create or link the Vercel project and configure its server-only provider environment variables.
 - [ ] Verify live Vercel frontend routing, tRPC, OAuth callback, and course-assistant serverless behavior.
 - [ ] Obtain final confirmation and deploy the connected GitHub repository to Vercel.
+- [x] Create the public Vercel project `path-skill` linked to the `main` branch.
+- [ ] Trigger the initial Vercel deployment and verify `path-skill.vercel.app` serves the `main` branch.
