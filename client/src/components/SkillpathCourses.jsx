@@ -4,18 +4,7 @@
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, Check, RefreshCw, Search, SlidersHorizontal } from "lucide-react";
-
-const API_ROOT = "https://syncsphere-hiv6.onrender.com";
-const DEFAULT_COUNTRY = typeof navigator !== "undefined" && navigator.language?.toLowerCase().includes("-in") ? "IN" : "US";
-
-const formatPrice = (course, countryCode) => {
-  if (countryCode === "IN") {
-    return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(course.pricePaise / 100);
-  }
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(course.priceUsdCents / 100);
-};
-
-const getCourseLabel = (course) => course.shortCourse || course.mainCategory || course.courseType || "Course";
+import { coursePath, defaultCountry, formatPrice, getCourseLabel, loadCountryCode, loadCourseData, saveCourseForDetail } from "../lib/courseCatalog";
 
 function SkeletonCard() {
   return (
@@ -31,6 +20,7 @@ function SkeletonCard() {
 }
 
 function CourseCard({ course, countryCode, index }) {
+  const href = coursePath(course);
   return (
     <article className="course-card" style={{ "--delay": `${index * 45}ms` }}>
       <div className="course-card-topline">
@@ -49,7 +39,7 @@ function CourseCard({ course, countryCode, index }) {
         </div>
         <div className="course-footer-meta">
           {course.refundable && <span className="refundable"><Check size={13} strokeWidth={3} /> Refundable</span>}
-          <button className="course-arrow" type="button" aria-label={`View ${course.courseName}`}><ArrowUpRight size={18} /></button>
+          <a className="course-arrow" href={href} onClick={() => saveCourseForDetail(course)} aria-label={`View ${course.courseName}`}><ArrowUpRight size={18} /></a>
         </div>
       </div>
     </article>
@@ -71,7 +61,7 @@ function CourseError({ onRetry }) {
 
 export default function SkillpathCourses({ accentColor = "#F26B38", maxColumns = 3 }) {
   const [courses, setCourses] = useState([]);
-  const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY);
+  const [countryCode, setCountryCode] = useState(defaultCountry);
   const [countryWarning, setCountryWarning] = useState(false);
   const [status, setStatus] = useState("loading");
   const [searchTerm, setSearchTerm] = useState("");
@@ -79,18 +69,11 @@ export default function SkillpathCourses({ accentColor = "#F26B38", maxColumns =
   const [requestKey, setRequestKey] = useState(0);
 
   const loadCourses = useCallback(async (signal) => {
-    const response = await fetch(`${API_ROOT}/assignment/course-data`, { method: "GET", signal, headers: { Accept: "application/json" } });
-    if (!response.ok) throw new Error(`Course request failed with ${response.status}`);
-    const data = await response.json();
-    if (!Array.isArray(data)) throw new Error("Course response was not an array");
-    return data;
+    return loadCourseData(signal);
   }, []);
 
   const loadCountry = useCallback(async (signal) => {
-    const response = await fetch(`${API_ROOT}/assignment/country-code`, { method: "GET", signal, headers: { Accept: "application/json" } });
-    if (!response.ok) throw new Error(`Country request failed with ${response.status}`);
-    const data = await response.json();
-    return data?.country_code === "IN" ? "IN" : "US";
+    return loadCountryCode(signal);
   }, []);
 
   useEffect(() => {

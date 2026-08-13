@@ -1,6 +1,8 @@
 # Skillpath
 
-A React landing page for the Skillpath junior developer assignment. The courses catalogue fetches live data from the assignment API and handles loading, error, empty, search, sort, and regional currency states.
+Skillpath is a responsive course-discovery experience with a live catalogue, regional pricing, routed course-detail pages, and a contextual AI assistant.
+
+The assistant receives the selected course’s verified metadata and recent conversation history on the server. It is instructed to answer only from that context and to state when the available course information is insufficient. API credentials never enter the browser bundle.
 
 ## Run locally
 
@@ -9,10 +11,17 @@ pnpm install
 pnpm dev
 ```
 
-## Build
+## Validate
 
 ```bash
+pnpm test
 pnpm build
 ```
 
-The primary implementation is in `client/src/components/SkillpathCourses.jsx` and `client/src/pages/Home.jsx`.
+## Provider configuration
+
+Configure one or more server-only environment variables through the project’s secure Secrets settings: `OPENROUTER_API`, `GROQ_API`, `MISTRAL_API`, `GEMINI_API`, and `COHERE_API`. The server attempts configured providers in that order and returns a user-safe error if none are available. `SCALEDOWN_API` is reserved for future context compression of longer course material.
+
+## Structure
+
+The catalogue component is in `client/src/components/SkillpathCourses.jsx`, course details are in `client/src/pages/CourseDetail.jsx`, and the grounded assistant fallback chain is in `server/courseAssistant.ts`.
