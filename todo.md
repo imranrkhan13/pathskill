@@ -8,4 +8,4 @@
 - [x] Add retry-and-cache handling for the intentionally intermittent live course and country APIs.
 - [x] Add and run course-assistant unit tests, a live server-only grounded-answer check, and production build verification.
 - [x] Verify the course detail view and assistant desktop layout.
-- [ ] Sync the completed full-stack implementation to the selected GitHub repository and push it.
+- [x] Sync the completed full-stack implementation to the selected GitHub repository and push it.
