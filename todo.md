@@ -19,3 +19,4 @@
 - [x] Create the public Vercel project `path-skill` linked to the `main` branch.
 - [ ] Trigger the initial Vercel deployment and verify `path-skill.vercel.app` serves the `main` branch.
 - [ ] Fix the Vercel rewrite so `/api/*` reaches the serverless handler instead of the SPA fallback.
+- [ ] Replace the Vercel function’s unresolved shared Express import with native health and course-assistant endpoints.

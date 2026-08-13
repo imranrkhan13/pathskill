@@ -4,12 +4,12 @@
   "installCommand": "pnpm install --frozen-lockfile",
   "outputDirectory": "dist/public",
   "functions": {
-    "api/[...path].ts": {
-      "maxDuration": 30
-    }
+    "api/course-assistant.js": { "maxDuration": 30 },
+    "api/health.js": { "maxDuration": 30 }
   },
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/[...path].ts" },
+    { "src": "/api/course-assistant", "dest": "/api/course-assistant.js" },
+    { "src": "/api/health", "dest": "/api/health.js" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]

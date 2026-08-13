@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Check, CircleHelp, LoaderCircle, RefreshCw, Sparkles } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { AIChatBox } from "../components/AIChatBox";
-import { trpc } from "../lib/trpc";
 import { courseSlug, defaultCountry, formatPrice, getCourseLabel, loadCountryCode, loadCourseData, readStoredCourse } from "../lib/courseCatalog";
 
 const logoImage = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663269119805/RLuUjxTpFhooJsSB.png";
@@ -25,6 +24,17 @@ const cleanCourse = (course) => ({
   refundable: Boolean(course.refundable),
 });
 
+const askCourseAssistant = async (course, messages) => {
+  const response = await fetch("/api/course-assistant", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ course, messages }),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result?.error || "The course assistant is unavailable right now. Please try again.");
+  return result;
+};
+
 export default function CourseDetail() {
   const [, params] = useRoute("/courses/:slug");
   const [course, setCourse] = useState(() => readStoredCourse());
@@ -32,7 +42,7 @@ export default function CourseDetail() {
   const [countryCode, setCountryCode] = useState(defaultCountry);
   const [messages, setMessages] = useState([]);
   const [assistantError, setAssistantError] = useState("");
-  const chatMutation = trpc.courseAssistant.ask.useMutation();
+  const [isAsking, setIsAsking] = useState(false);
 
   useEffect(() => {
     const stored = readStoredCourse();
@@ -68,23 +78,21 @@ export default function CourseDetail() {
 
   const courseContext = useMemo(() => (course ? cleanCourse(course) : null), [course]);
 
-  const sendMessage = (content) => {
-    if (!courseContext || chatMutation.isPending) return;
+  const sendMessage = async (content) => {
+    if (!courseContext || isAsking) return;
     const nextMessages = [...messages, { role: "user", content }];
     setMessages(nextMessages);
     setAssistantError("");
+    setIsAsking(true);
 
-    chatMutation.mutate(
-      { course: courseContext, messages: nextMessages.slice(-8) },
-      {
-        onSuccess: (result) => {
-          setMessages((current) => [...current, { role: "assistant", content: result.answer }]);
-        },
-        onError: (error) => {
-          setAssistantError(error.message || "The course assistant is unavailable right now. Please try again.");
-        },
-      }
-    );
+    try {
+      const result = await askCourseAssistant(courseContext, nextMessages.slice(-8));
+      setMessages((current) => [...current, { role: "assistant", content: result.answer }]);
+    } catch (error) {
+      setAssistantError(error instanceof Error ? error.message : "The course assistant is unavailable right now. Please try again.");
+    } finally {
+      setIsAsking(false);
+    }
   };
 
   if (status === "loading") {
@@ -144,7 +152,7 @@ export default function CourseDetail() {
             <AIChatBox
               messages={messages}
               onSendMessage={sendMessage}
-              isLoading={chatMutation.isPending}
+              isLoading={isAsking}
               height="440px"
               placeholder={`Ask about ${course.courseName}`}
               emptyStateMessage="Ask a course-specific question"
