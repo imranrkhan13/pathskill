@@ -9,3 +9,10 @@
 - [x] Add and run course-assistant unit tests, a live server-only grounded-answer check, and production build verification.
 - [x] Verify the course detail view and assistant desktop layout.
 - [x] Sync the completed full-stack implementation to the selected GitHub repository and push it.
+- [x] Inspect connected Vercel access and Vercel-compatible serverless requirements.
+- [x] Adapt the Express and tRPC application for Vercel serverless deployment without exposing AI credentials.
+- [x] Validate the Vercel build configuration, TypeScript checks, and local production bundle.
+- [ ] Sync the Vercel-compatible configuration to the selected GitHub repository and push it.
+- [ ] Create or link the Vercel project and configure its server-only provider environment variables.
+- [ ] Verify live Vercel frontend routing, tRPC, OAuth callback, and course-assistant serverless behavior.
+- [ ] Obtain final confirmation and deploy the connected GitHub repository to Vercel.

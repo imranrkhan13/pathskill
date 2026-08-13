@@ -5,7 +5,7 @@ import { AIChatBox } from "../components/AIChatBox";
 import { trpc } from "../lib/trpc";
 import { courseSlug, defaultCountry, formatPrice, getCourseLabel, loadCountryCode, loadCourseData, readStoredCourse } from "../lib/courseCatalog";
 
-const logoImage = "/manus-storage/skillpath-logo_563788bb.png";
+const logoImage = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663269119805/RLuUjxTpFhooJsSB.png";
 
 const suggestedPrompts = [
   "What will I learn in this course?",

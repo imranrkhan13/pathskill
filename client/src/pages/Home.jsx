@@ -5,8 +5,8 @@
 import { ArrowDown, ArrowUpRight, MoveRight } from "lucide-react";
 import SkillpathCourses from "../components/SkillpathCourses";
 
-const heroImage = "/manus-storage/skillpath-hero_e66b2493.jpg";
-const logoImage = "/manus-storage/skillpath-logo_563788bb.png";
+const heroImage = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663269119805/EoHsjcRpBRcUErgj.jpg";
+const logoImage = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663269119805/RLuUjxTpFhooJsSB.png";
 
 export default function Home() {
   return (
