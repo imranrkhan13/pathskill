@@ -15,6 +15,9 @@ export function createApiApplication() {
 
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  app.get("/api/health", (_req, res) => {
+    res.status(200).json({ status: "ok", service: "skillpath-api" });
+  });
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   app.use(
